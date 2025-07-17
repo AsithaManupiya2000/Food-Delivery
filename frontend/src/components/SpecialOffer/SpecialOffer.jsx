@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { additionalData, cardData } from '../../assets/dummydata';
 import { useCart } from '../../CartContext/CartContext';
+import { FaHeart, FaPlus, FaStar } from 'react-icons/fa';
+import { HiMinus, HiPlus } from 'react-icons/hi';
 
 const SpecialOffer = () => {
 
@@ -21,7 +23,7 @@ const SpecialOffer = () => {
                 </p>
 
                 {/** Product Card */}
-                <div className=' grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'>
+                <div className=' grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-10'>
                     {(showAll ? initialData : initialData.slice(0,4)).map((item,index) => {
                         const cardItem = cartItems.find(ci => ci.id === item.id);
                         const quantity = cardItem ? cardItem.quantity : 0;
@@ -32,6 +34,60 @@ const SpecialOffer = () => {
                               before:inset-0 hover:before:opacity-20'>
                                 <div className=' relative h-72 overflow-hidden'>
                                     <img src={item.image} alt={item.title} className=' w-full h-full object-cover brightness-90 group-hover:brightness-110 transition-all duration-500'/>
+
+                                    <div className=' absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/90'/>
+                                    <div className=' absolute bottom-4 left-4 right-4 flex justify-between items-center bg-black/40 backdrop-blur-sm px-4 py-2 rounded-full'>                                    
+                                        <span className=' flex items-center gap-2 text-amber-400'>
+                                            <FaStar className=' text-xl drop-shadow-[0_2px_2px_rgba(0,0,0,0,8)]'/>
+                                            <span className=' font-bold '>{item.rating}</span>
+                                        </span>
+
+                                        <span className=' flex items-center gap-2 text-red-400'>
+                                            <FaHeart className=' text-xl animate-heartbeat'/>
+                                            <span className=' font-bold'>{item.hearts}</span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className=' p-6 relative z-10 '>
+                                    <h3 className=' text-2xl font-bold mb-2 bg-gradient-to-r from-amber-300 to-amber-500 bg-clip-text text-transparent font-[Playfair_Display] italic'>
+                                        {item.title}
+                                    </h3>
+
+                                    <p className=' text-gray-300 mb-5 text-sm leading-relaxed tracking-wide'>{item.description}</p>
+
+                                    <div className=' flex items-center justify-between gap-4'>
+                                        <span className=' text-2xl font-bold text-amber-400 flex-1'>{item.price}</span>
+                                        
+                                        {cartItems ? (
+                                            <div className=' flex items-center gap-3'>
+                                                <button onClick={() => {quantity> 1 ? updateQuantity(item.id, quantity - 1) : 
+                                                    removeFromCart(item.id)
+                                                }} className=' w-8 h-8 rounded-full bg-amber-900/40 flex items-center justify-center hover:bg-amber-800/50 
+                                                transition-all duration-200 active:scale-95'>
+                                                    <HiMinus className=' h-4 w-4 text-amber-100'/>
+                                                </button>
+                                                <span className=' w-8 text-center text-amber-100 font-cinzel'>
+                                                    {quantity}
+                                                </span>
+
+                                                <button onClick={() => updateQuantity(item.id, quantity + 1)}
+                                                 className=' w-8 h-8 rounded-full bg-amber-900/40 flex items-center justify-center hover:bg-amber-800/50 
+                                                transition-all duration-200 active:scale-95'>
+                                                    <HiPlus className=' h-4 w-4 text-amber-100'/>
+                                                </button>
+                                            </div>
+                                        ):(
+                                            <button onClick={() => addToCart({...item, name: item.title, price:parseFloat(item.price.replace('$',''))}, 1)}
+                                             className={`${addButtonBase} ${addButtonHover} ${commonTransition}`}>
+                                                <div className=' absolute inset-0 bg-gradient-to-r from-amber-500/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300'>
+                                                    <FaPlus className=' text-lg transition-transform'/>
+                                                    <span className=' relative z-10'> Add</span>
+                                                </div>
+
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         )
